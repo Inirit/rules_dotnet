@@ -19,6 +19,7 @@ DotnetAssemblyInfo = provider(
         "runtime_deps": "list[DotnetDepVariantInfo]: The direct dependencies of the assembly",
         "transitive_runtime_deps": "depset[DotnetDepVariantInfo]: The transitive runtime dependencies of the assembly",
         "transitive_libs": "depset[File]: Transitive runtime DLLs",
+        "transitive_pdbs": "depset[File]: Transitive PDBs",
         "transitive_native": "depset[File]: Transitive native runtime files",
         "transitive_data": "depset[File]: Transitive runtime data files",
         "transitive_compile_data": "depset[File]: Transitive compile data files",

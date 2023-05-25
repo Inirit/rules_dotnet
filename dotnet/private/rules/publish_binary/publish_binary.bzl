@@ -121,6 +121,15 @@ def _copy_to_publish(ctx, runtime_identifier, publish_binary_info, binary_info, 
         inputs.append(file)
         _copy_file(script_body, file, output, is_windows = is_windows)
 
+    # All PDBs are copied next to the app host in the publish directory
+    for file in assembly_info.pdbs + assembly_info.transitive_pdbs.to_list():
+        output = ctx.actions.declare_file(
+            "{}/publish/{}/{}".format(ctx.label.name, runtime_identifier, file.basename),
+        )
+        outputs.append(output)
+        inputs.append(file)
+        _copy_file(script_body, file, output, is_windows = is_windows)
+
     # When publishing a self-contained binary, we need to copy the native DLLs to the
     # publish directory as well.
     for file in assembly_info.native + assembly_info.transitive_native.to_list():

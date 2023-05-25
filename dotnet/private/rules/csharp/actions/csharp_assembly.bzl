@@ -125,6 +125,7 @@ def AssemblyAction(
         prefs,
         analyzers,
         transitive_libs,
+        transitive_pdbs,
         transitive_native,
         transitive_data,
         transitive_compile_data,
@@ -280,6 +281,7 @@ def AssemblyAction(
         transitive_refs = prefs,
         transitive_analyzers = analyzers,
         transitive_libs = transitive_libs,
+        transitive_pdbs = transitive_pdbs,
         transitive_native = transitive_native,
         transitive_data = transitive_data,
         transitive_compile_data = transitive_compile_data,
@@ -378,6 +380,9 @@ def _compile(
         args.add("/out:" + out_dll.path)
         args.add("/refout:" + out_ref.path)
         args.add("/pdb:" + out_pdb.path)
+
+        print(out_pdb.path)
+
         outputs = [out_dll, out_ref, out_pdb]
     else:
         args.add("/refonly")
