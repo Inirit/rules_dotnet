@@ -381,8 +381,6 @@ def _compile(
         args.add("/refout:" + out_ref.path)
         args.add("/pdb:" + out_pdb.path)
 
-        print(out_pdb.path)
-
         outputs = [out_dll, out_ref, out_pdb]
     else:
         args.add("/refonly")
