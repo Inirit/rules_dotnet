@@ -200,6 +200,39 @@ def _process_typeprovider_file(groups, file):
 
     return
 
+def _process_build_file(groups, file):
+    i = file.find("/")
+    tfm_start = i + 1
+    tfm_end = file.find("/", i + 1)
+    tfm = file[tfm_start:tfm_end]
+
+    if tfm not in FRAMEWORK_COMPATIBILITY:
+        return
+
+    # If the folder is empty we do nothing
+    if file.find("/", tfm_end + 1) != -1:
+        return
+
+    if not groups.get("build"):
+        groups["build"] = {}
+
+    group = groups["build"]
+
+    if not group.get(tfm):
+        group[tfm] = []
+
+    # If the folder contains a _._ file we create the group but do not add the file to it
+    # to indicate that there was an _._ file in the folder.
+    if file.endswith("_._"):
+        return
+
+    if not file.endswith(".dll") or file.endswith(".resources.dll"):
+        return
+
+    group[tfm].append(file)
+
+    return
+
 def _process_runtimes_file(groups, file):
     # See https://docs.microsoft.com/en-us/nuget/create-packages/supporting-multiple-target-frameworks#architecture-specific-folders
     parts = file.split("/")
@@ -263,6 +296,8 @@ def _process_key_and_file(groups, key, file):
     # todo resource dlls
     if key == "lib":
         _process_lib_file(groups, file)
+    elif key == "build":
+        _process_build_file(groups, file)
     elif key == "ref":
         _process_ref_file(groups, file)
     elif key == "analyzers":
@@ -317,6 +352,7 @@ exports_files(glob(["**"]))
 load("@rules_dotnet//dotnet/private/rules/nuget:nuget_archive.bzl", "tfm_filegroup", "rid_filegroup")
 """ + "\n".join([
         _create_framework_select("libs", groups.get("lib")) or "filegroup(name = \"libs\", srcs = [])",
+        _create_framework_select("build", groups.get("build")) or "filegroup(name = \"build\", srcs = [])",
         _create_framework_select("refs", groups.get("ref")) or _create_framework_select("refs", groups.get("lib")) or "filegroup(name = \"refs\", srcs = [])",
         "filegroup(name = \"analyzers\", srcs = [%s])" % ",".join(["\n  \"%s\"" % a for a in groups.get("analyzers")["dotnet"]]),
         "filegroup(name = \"data\", srcs = [])",

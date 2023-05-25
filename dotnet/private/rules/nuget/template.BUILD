@@ -8,6 +8,7 @@ import_library(
     data = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:data"],
     library_name = "{NAME}",
     libs = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:libs"],
+    build = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:build"],
     native = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:native"],
     refs = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:refs"],
     sha512 = "{SHA_512}",
