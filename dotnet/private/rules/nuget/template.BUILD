@@ -9,6 +9,7 @@ import_library(
     library_name = "{NAME}",
     libs = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:libs"],
     build = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:build"],
+    tools = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:tools"],
     native = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:native"],
     refs = ["@{PREFIX}.{NAME_LOWER}.v{VERSION}//:refs"],
     sha512 = "{SHA_512}",

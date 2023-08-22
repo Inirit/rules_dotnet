@@ -38,6 +38,7 @@ def _import_library(ctx):
         version = ctx.attr.version,
         project_sdk = "default",
         libs = ctx.files.libs + ctx.files.build,
+        tools = ctx.files.tools,
         # TODO: PDBs from nuget packages should also be forwarded
         pdbs = [],
         refs = ctx.files.refs,
@@ -81,6 +82,11 @@ import_library = rule(
         "build": attr.label_list(
             doc = "Additional static runtime DLLs",
             allow_files = True,  # [".dll"] currently does not work with empty file groups
+            allow_empty = True,
+        ),
+        "tools": attr.label_list(
+            doc = "Tool DLLs",
+            allow_files = True,
             allow_empty = True,
         ),
         "native": attr.label_list(
