@@ -2,6 +2,7 @@ load("@rules_dotnet//dotnet:defs.bzl", "fsharp_binary")
 
 fsharp_binary(
     name = "paket2bazel.exe",
+    visibility = ["//visibility:public"],
     srcs = [
         # Keep order
         "Models.fs",
