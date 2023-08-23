@@ -233,7 +233,7 @@ def _process_build_file(groups, file):
 
     return
 
-def _process_tool_file(groups, file):
+def _process_tools_file(groups, file):
     i = file.find("/")
     tfm_start = i + 1
     tfm_end = file.find("/", i + 1)
@@ -246,10 +246,10 @@ def _process_tool_file(groups, file):
     if file.find("/", tfm_end + 1) != -1:
         return
 
-    if not groups.get("tool"):
-        groups["tool"] = {}
+    if not groups.get("tools"):
+        groups["tools"] = {}
 
-    group = groups["tool"]
+    group = groups["tools"]
 
     if not group.get(tfm):
         group[tfm] = []
@@ -328,8 +328,8 @@ def _process_key_and_file(groups, key, file):
         _process_lib_file(groups, file)
     elif key == "build":
         _process_build_file(groups, file)
-    elif key == "tool":
-        _process_tool_file(groups, file)
+    elif key == "tools":
+        _process_tools_file(groups, file)
     elif key == "ref":
         _process_ref_file(groups, file)
     elif key == "analyzers":
@@ -385,7 +385,7 @@ load("@rules_dotnet//dotnet/private/rules/nuget:nuget_archive.bzl", "tfm_filegro
 """ + "\n".join([
         _create_framework_select("libs", groups.get("lib")) or "filegroup(name = \"libs\", srcs = [])",
         _create_framework_select("build", groups.get("build")) or "filegroup(name = \"build\", srcs = [])",
-        _create_framework_select("tools", groups.get("tool")) or "filegroup(name = \"tools\", srcs = [])",
+        _create_framework_select("tools", groups.get("tools")) or "filegroup(name = \"tools\", srcs = [])",
         _create_framework_select("refs", groups.get("ref")) or _create_framework_select("refs", groups.get("lib")) or "filegroup(name = \"refs\", srcs = [])",
         "filegroup(name = \"analyzers\", srcs = [%s])" % ",".join(["\n  \"%s\"" % a for a in groups.get("analyzers")["dotnet"]]),
         "filegroup(name = \"data\", srcs = [])",
