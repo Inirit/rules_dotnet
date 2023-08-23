@@ -242,10 +242,6 @@ def _process_tools_file(groups, file):
     if tfm not in FRAMEWORK_COMPATIBILITY:
         return
 
-    # If the folder is empty we do nothing
-    if file.find("/", tfm_end + 1) != -1:
-        return
-
     if not groups.get("tools"):
         groups["tools"] = {}
 
