@@ -9,6 +9,7 @@ csharp_binary(
         "AppHostShellShimMaker.cs",
         "Program.cs",
     ],
+    globalization_invariant = True,
     include_host_model_dll = True,
     target_frameworks = ["net6.0"],
     targeting_packs = ["@rules_dotnet_nuget_packages//microsoft.netcore.app.ref"],
