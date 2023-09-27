@@ -142,6 +142,11 @@ COMMON_ATTRS = {
         doc = "Whether or not to generate a documentation file.",
         default = True,
     ),
+    "globalization_invariant": attr.bool(
+        doc = "Whether or not to build in globalization-invariant mode. " +
+              "See https://learn.microsoft.com/en-us/dotnet/core/runtime-config/globalization",
+        default = False,
+    ),
     "_target_framework": attr.label(
         default = "@rules_dotnet//dotnet:target_framework",
     ),

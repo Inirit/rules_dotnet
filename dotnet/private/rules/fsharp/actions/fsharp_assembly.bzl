@@ -91,6 +91,7 @@ def AssemblyAction(
         toolchain,
         strict_deps,
         generate_documentation_file,
+        globalization_invariant,
         treat_warnings_as_errors,
         warnings_as_errors,
         warnings_not_as_errors,
@@ -122,6 +123,7 @@ def AssemblyAction(
         toolchain: The toolchain that supply the F# compiler.
         strict_deps: Whether or not to use strict dependencies.
         generate_documentation_file: Whether or not to output XML docs for the compiled dll.
+        globalization_invariant: Whether or not to build in globalization-invariant mode.
         treat_warnings_as_errors: Whether or not to treat warnings as errors.
         warnings_as_errors: List of warnings to treat as errors.
         warnings_not_as_errors: List of warnings to not treat errors.
@@ -176,6 +178,7 @@ def AssemblyAction(
             target_name,
             target_framework,
             toolchain,
+            globalization_invariant,
             treat_warnings_as_errors,
             warnings_as_errors,
             warnings_not_as_errors,
@@ -213,6 +216,7 @@ def AssemblyAction(
             target_name,
             target_framework,
             toolchain,
+            globalization_invariant,
             treat_warnings_as_errors,
             warnings_as_errors,
             warnings_not_as_errors,
@@ -242,6 +246,7 @@ def AssemblyAction(
                 target_name,
                 target_framework,
                 toolchain,
+                globalization_invariant,
                 treat_warnings_as_errors,
                 warnings_as_errors,
                 warnings_not_as_errors,
@@ -295,6 +300,7 @@ def _compile(
         target_name,
         target_framework,
         toolchain,
+        globalization_invariant,
         treat_warnings_as_errors,
         warnings_as_errors,
         warnings_not_as_errors,
@@ -408,5 +414,6 @@ def _compile(
         ],
         env = {
             "DOTNET_CLI_HOME": toolchain.runtime.files_to_run.executable.dirname,
+            "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": "1" if globalization_invariant else "0"
         },
     )
