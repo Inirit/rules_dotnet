@@ -104,13 +104,15 @@ def _copy_file(script_body, src, dst, is_windows):
 
 def _get_assembly_files(assembly_info, transitive_runtime_deps):
     libs = [] + assembly_info.libs
+    pdbs = [] + assembly_info.pdbs
     native = [] + assembly_info.native
     data = [] + assembly_info.data
     for dep in transitive_runtime_deps:
         libs += dep.libs
+        pdbs += dep.pdbs
         native += dep.native
         data += dep.data
-    return (libs, native, data)
+    return (libs, pdbs, native, data)
 
 def _copy_to_publish(ctx, runtime_identifier, publish_binary_info, binary_info, assembly_info, transitive_runtime_deps):
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
@@ -123,10 +125,19 @@ def _copy_to_publish(ctx, runtime_identifier, publish_binary_info, binary_info, 
 
     _copy_file(script_body, binary_info.app_host, app_host_copy, is_windows = is_windows)
 
-    (libs, native, data) = _get_assembly_files(assembly_info, transitive_runtime_deps)
+    (libs, pdbs, native, data) = _get_assembly_files(assembly_info, transitive_runtime_deps)
 
     # All managed DLLs are copied next to the app host in the publish directory
     for file in libs:
+        output = ctx.actions.declare_file(
+            "{}/publish/{}/{}".format(ctx.label.name, runtime_identifier, file.basename),
+        )
+        outputs.append(output)
+        inputs.append(file)
+        _copy_file(script_body, file, output, is_windows = is_windows)
+
+    # All PDBs are copied next to the app host in the publish directory
+    for file in pdbs:
         output = ctx.actions.declare_file(
             "{}/publish/{}/{}".format(ctx.label.name, runtime_identifier, file.basename),
         )
