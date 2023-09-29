@@ -447,6 +447,7 @@ load("@rules_dotnet//dotnet/private/rules/nuget:nuget_archive.bzl", "tfm_filegro
         "filegroup(name = \"data\", srcs = [])",
         _create_rid_native_select("native", native) or "filegroup(name = \"native\", srcs = [])",
         "filegroup(name = \"content_files\", srcs = [%s])" % ",".join(["\n  \"%s\"" % a for a in groups.get("contentFiles")["any"]]),
+        "filegroup(name = \"all_files\", srcs = [%s])" % ",".join(["\n  \"%s\"" % _sanitize_path(file) for file in files]),
     ]))
 
 nuget_archive = repository_rule(
