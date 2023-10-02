@@ -84,8 +84,9 @@ filegroup(
     data = glob([
         "host/**/*",
         "sdk/**/*.dll",
-        "sdk/**/dotnet.runtimeconfig.json",
-        "sdk/**/dotnet.deps.json",
+        "sdk/**/*.dll.config",
+        "sdk/**/*.runtimeconfig.json",
+        "sdk/**/*.deps.json",
         "shared/Microsoft.NETCore.App/**/*",
     ]),
     visibility = ["//visibility:public"],
