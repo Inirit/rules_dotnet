@@ -158,8 +158,8 @@ def _process_build_file(groups, file):
 
     if file_type == "ref":
         group[tfm]["ref"].append(file)
-
-    if file_type == "lib":
+    else:
+        # If not explicitly labeled as a ref, assume it to be a lib
         group[tfm]["lib"].append(file)
 
     return
