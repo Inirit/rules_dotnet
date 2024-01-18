@@ -8,10 +8,10 @@ genrule(
     outs = ["dotnet_bin.txt"],
     cmd = "DOTNET_CLI_HOME=\"$$(pwd)/$$(dirname $(DOTNET_BIN))\" \"$(DOTNET_BIN)\" --help > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
@@ -26,10 +26,10 @@ genrule(
     outs = ["csc_bin.txt"],
     cmd = "DOTNET_CLI_HOME=\"$$(pwd)/$$(dirname $(DOTNET_BIN))\" \"$(DOTNET_BIN)\" \"$(CSC_BIN)\" -help > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
@@ -44,10 +44,10 @@ genrule(
     outs = ["fsc_bin.txt"],
     cmd = "DOTNET_CLI_HOME=\"$$(pwd)/$$(dirname $(DOTNET_BIN))\" \"$(DOTNET_BIN)\" \"$(FSC_BIN)\" --help > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
@@ -62,17 +62,17 @@ genrule(
     outs = ["dotnet_sdk_version.txt"],
     cmd = "echo \"$(DOTNET_SDK_VERSION)\" > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
 assert_contains(
     name = "check_dotnet_sdk_version_output",
     actual = ":dotnet_sdk_version",
-    expected = "7.0.101",
+    expected = "8.0.100",
 )
 
 genrule(
@@ -80,17 +80,17 @@ genrule(
     outs = ["dotnet_runtime_version.txt"],
     cmd = "echo \"$(DOTNET_RUNTIME_VERSION)\" > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
 assert_contains(
     name = "check_dotnet_runtime_version_output",
     actual = ":dotnet_runtime_version",
-    expected = "7.0.1",
+    expected = "8.0.0",
 )
 
 genrule(
@@ -98,15 +98,15 @@ genrule(
     outs = ["dotnet_runtime_tfm.txt"],
     cmd = "echo \"$(DOTNET_RUNTIME_TFM)\" > $@",
     toolchains = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
     tools = [
-        "@rules_dotnet//dotnet:resolved_toolchain",
+        "//dotnet:resolved_toolchain",
     ],
 )
 
 assert_contains(
     name = "check_dotnet_runtime_tfm_output",
     actual = ":dotnet_runtime_tfm",
-    expected = "net7.0",
+    expected = "net8.0",
 )
