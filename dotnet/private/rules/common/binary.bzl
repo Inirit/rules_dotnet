@@ -18,7 +18,7 @@ load("//dotnet/private:providers.bzl", "DotnetBinaryInfo")
 def _create_shim_exe(ctx, dll):
     windows_constraint = ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]
 
-    apphost = ctx.toolchains["@rules_dotnet//dotnet:toolchain_type"].apphost
+    apphost = ctx.toolchains["//dotnet:toolchain_type"].apphost
     output = ctx.actions.declare_file(paths.replace_extension(dll.basename, ".exe" if ctx.target_platform_has_constraint(windows_constraint) else ""), sibling = dll)
 
     ctx.actions.run(
@@ -32,7 +32,7 @@ def _create_shim_exe(ctx, dll):
     return output
 
 def _create_launcher(ctx, runfiles, executable):
-    runtime = ctx.toolchains["@rules_dotnet//dotnet:toolchain_type"].runtime
+    runtime = ctx.toolchains["//dotnet:toolchain_type"].runtime
     windows_constraint = ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]
 
     launcher = ctx.actions.declare_file("{}.{}".format(executable.basename, "bat" if ctx.target_platform_has_constraint(windows_constraint) else "sh"), sibling = executable)
@@ -59,7 +59,7 @@ def _create_launcher(ctx, runfiles, executable):
         )
         runfiles.append(ctx.file._bash_runfiles)
 
-    runfiles.extend(ctx.toolchains["@rules_dotnet//dotnet:toolchain_type"].dotnetinfo.runtime_files)
+    runfiles.extend(ctx.toolchains["//dotnet:toolchain_type"].dotnetinfo.runtime_files)
 
     return launcher
 
@@ -101,12 +101,12 @@ def build_binary(ctx, compile_action):
 
     if is_core_framework(tfm):
         # Create the runtimeconfig.json for the binary
-        runtimeconfig = ctx.actions.declare_file("bazelout/%s/%s.runtimeconfig.json" % (tfm, ctx.attr.out or ctx.attr.name))
+        runtimeconfig = ctx.actions.declare_file("%s/%s/%s.runtimeconfig.json" % (ctx.label.name, tfm, ctx.attr.out or ctx.attr.name))
         runtimeconfig_struct = generate_runtimeconfig(
             target_framework = tfm,
             project_sdk = ctx.attr.project_sdk,
             is_self_contained = False,
-            toolchain = ctx.toolchains["@rules_dotnet//dotnet:toolchain_type"],
+            toolchain = ctx.toolchains["//dotnet:toolchain_type"],
         )
 
         # Add additional lookup paths so that we can avoid copying all DLLs
@@ -125,7 +125,7 @@ def build_binary(ctx, compile_action):
             content = json.encode_indent(runtimeconfig_struct),
         )
 
-        depsjson = ctx.actions.declare_file("bazelout/%s/%s.deps.json" % (tfm, ctx.attr.out or ctx.attr.name))
+        depsjson = ctx.actions.declare_file("%s/%s/%s.deps.json" % (ctx.label.name, tfm, ctx.attr.out or ctx.attr.name))
         depsjson_struct = generate_depsjson(
             ctx,
             target_framework = tfm,
