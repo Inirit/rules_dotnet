@@ -21,7 +21,7 @@ def _collect_transitive():
         t[framework] = sets.union(sets.make([framework]), *[t[c] for c in compat])
     return t
 
-DEFAULT_TFM = "net7.0"
+DEFAULT_TFM = "net8.0"
 DEFAULT_RID = "base"
 
 # A dict of target frameworks to the set of other framworks it can compile
@@ -70,6 +70,7 @@ FRAMEWORK_COMPATIBILITY = {
     "net5.0": ["netcoreapp3.1"],
     "net6.0": ["net5.0"],
     "net7.0": ["net6.0"],
+    "net8.0": ["net7.0"],
 }
 
 _subsystem_version = {
@@ -109,6 +110,7 @@ _subsystem_version = {
     "net5.0": None,
     "net6.0": None,
     "net7.0": None,
+    "net8.0": None,
 }
 
 _default_lang_version_csharp = {
@@ -148,6 +150,7 @@ _default_lang_version_csharp = {
     "net5.0": "9.0",
     "net6.0": "10.0",
     "net7.0": "11.0",
+    "net8.0": "12.0",
 }
 
 _net = FRAMEWORK_COMPATIBILITY.keys().index("net11")
@@ -324,6 +327,11 @@ def collect_transitive_runfiles(ctx, assembly_runtime_info, deps):
     transitive_runfiles = []
     for dep in deps:
         transitive_runfiles.append(dep[DefaultInfo].default_runfiles)
+
+    for d in ctx.attr.data:
+        if not DefaultInfo in d:
+            continue
+        runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
 
     return runfiles.merge_all(transitive_runfiles)
 

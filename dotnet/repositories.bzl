@@ -19,12 +19,13 @@ def http_archive(name, **kwargs):
 # buildifier: disable=function-docstring
 def rules_dotnet_dependencies():
     # The minimal version of bazel_skylib we require
+
     http_archive(
         name = "bazel_skylib",
-        sha256 = "f24ab666394232f834f74d19e2ff142b0af17466ea0c69a3f4c276ee75f6efce",
+        sha256 = "66ffd9315665bfaafc96b52278f57c7e2dd09f5ede279ea6d39b2be471e7e3aa",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.4.0/bazel-skylib-1.4.0.tar.gz",
-            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.0/bazel-skylib-1.4.0.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.4.2/bazel-skylib-1.4.2.tar.gz",
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.2/bazel-skylib-1.4.2.tar.gz",
         ],
     )
 
@@ -83,9 +84,7 @@ filegroup(
     }}),
     data = glob([
         "host/**/*",
-        "sdk/**/*.dll",
-        "sdk/**/dotnet.runtimeconfig.json",
-        "sdk/**/dotnet.deps.json",
+        "sdk/**/*",
         "shared/Microsoft.NETCore.App/**/*",
     ]),
     visibility = ["//visibility:public"],
@@ -154,7 +153,7 @@ dotnet_repositories = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def dotnet_register_toolchains(name, dotnet_version, **kwargs):
+def dotnet_register_toolchains(name, dotnet_version, register = True, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "dotnet_linux_amd64" -
@@ -164,7 +163,9 @@ def dotnet_register_toolchains(name, dotnet_version, **kwargs):
     Users can avoid this macro and do these steps themselves, if they want more control.
     Args:
         name: base name for all created repos, like "dotnet"
-        dotnet_version: The .Net SDK version to use e.g. 7.0.101
+        dotnet_version: The .Net SDK version to use e.g. 8.0.100
+        register: whether to call through to native.register_toolchains.
+            Should be True for WORKSPACE users, but false when used under bzlmod extension
         **kwargs: passed to each dotnet_repositories call
     """
     for platform in PLATFORMS.keys():
@@ -174,7 +175,8 @@ def dotnet_register_toolchains(name, dotnet_version, **kwargs):
             dotnet_version = dotnet_version,
             **kwargs
         )
-        native.register_toolchains("@%s_toolchains//:%s_toolchain" % (name, platform))
+        if register:
+            native.register_toolchains("@%s_toolchains//:%s_toolchain" % (name, platform))
 
     toolchains_repo(
         name = name + "_toolchains",
